@@ -1,0 +1,46 @@
+#------------------------------------------------------------------------------
+# Common
+#------------------------------------------------------------------------------
+friendly_name_prefix  = "vaultdemo"
+location              = "eastus"
+create_resource_group = true
+resource_group_name   = "vault-demo-rg"
+vault_fqdn            = "vault.example.com" # Must match TLS cert SAN entry
+vault_version         = "1.21.4+ent"
+#------------------------------------------------------------------------------
+# Networking
+#------------------------------------------------------------------------------
+vnet_id                        = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-network-rg/providers/Microsoft.Network/virtualNetworks/example-vnet"
+vault_subnet_id                = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-network-rg/providers/Microsoft.Network/virtualNetworks/example-vnet/subnets/vault-subnet"
+lb_subnet_id                   = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-network-rg/providers/Microsoft.Network/virtualNetworks/example-vnet/subnets/lb-subnet"
+lb_is_internal                 = false
+create_vault_public_dns_record = true
+public_dns_zone_name           = "example.com" # Must match vault_fqdn
+public_dns_zone_rg             = "example-dns-rg"                          # Resource Group containing the public DNS zone
+#------------------------------------------------------------------------------
+# Azure Key Vault installation secrets and unseal key
+#------------------------------------------------------------------------------
+prereqs_keyvault_rg_name               = "example-security-rg"
+prereqs_keyvault_name                  = "example-prereqs-kv"
+vault_license_keyvault_secret_id       = "https://example-prereqs-kv.vault.azure.net/secrets/vault-license/00000000000000000000000000000000"
+vault_tls_cert_keyvault_secret_id      = "https://example-prereqs-kv.vault.azure.net/secrets/vault-cert/00000000000000000000000000000000"
+vault_tls_privkey_keyvault_secret_id   = "https://example-prereqs-kv.vault.azure.net/secrets/vault-privkey/00000000000000000000000000000000"
+vault_tls_ca_bundle_keyvault_secret_id = "https://example-prereqs-kv.vault.azure.net/secrets/vault-ca-bundle/00000000000000000000000000000000"
+
+vault_seal_azurekeyvault_vault_name      = "example-prereqs-kv"
+vault_seal_azurekeyvault_unseal_key_name = "vault-unseal-key"
+
+#------------------------------------------------------------------------------
+# Compute
+#------------------------------------------------------------------------------
+vm_ssh_public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCdummyExamplePublicKeyReplaceMeGeneratedForDocsOnly user@example.com"
+
+vault_telemetry_config = {
+  prometheus_retention_time = "30s"
+  disable_hostname          = true
+}
+
+enable_telegraf_monitoring = true
+
+
+
