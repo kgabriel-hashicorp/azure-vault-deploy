@@ -31,7 +31,13 @@ function install_telegraf {
   [Service]
   Type=simple
   User=telegraf
+%{ if telegraf_azure_auth_mode == "managed_identity" ~}
+  Environment=AZURE_CLIENT_ID=${telegraf_azure_managed_identity_client_id}
+%{ else ~}
+  Environment=AZURE_TENANT_ID=${telegraf_azure_tenant_id}
   Environment=AZURE_CLIENT_ID=${telegraf_azure_client_id}
+  Environment=AZURE_CLIENT_SECRET=${telegraf_azure_client_secret}
+%{ endif ~}
   ExecStart=/usr/local/bin/telegraf --config /etc/telegraf/telegraf.conf
   Restart=always
   RestartSec=5

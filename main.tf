@@ -53,6 +53,11 @@ module "vault-hvd" {
   vm_sku            = "Standard_D2s_v5"
   enable_telegraf_monitoring = var.enable_telegraf_monitoring
   telegraf_config_template = var.telegraf_config_template
+  telegraf_azure_auth_mode = var.telegraf_azure_auth_mode
+  telegraf_azure_tenant_id = var.telegraf_azure_tenant_id
+  telegraf_azure_client_id = var.telegraf_azure_client_id
+  telegraf_azure_client_secret = var.telegraf_azure_client_secret
+  telegraf_metrics_publisher_principal_id = var.telegraf_metrics_publisher_principal_id
 
   vault_telemetry_config = var.vault_telemetry_config
 }

@@ -8,9 +8,17 @@ locals {
   telegraf_custom_data_args = var.enable_telegraf_monitoring ? {
     enable_telegraf_monitoring = true
     telegraf_install_function  = templatefile(local.telegraf_install_template, {
-      telegraf_version         = var.telegraf_version
-      telegraf_config_b64      = base64encode(templatefile(local.telegraf_config_template, {}))
-      telegraf_azure_client_id = azurerm_user_assigned_identity.vault.client_id
+      telegraf_version                          = var.telegraf_version
+      telegraf_config_b64                       = base64encode(templatefile(local.telegraf_config_template, {
+        telegraf_azure_auth_mode = var.telegraf_azure_auth_mode
+        telegraf_azure_tenant_id = var.telegraf_azure_tenant_id
+        telegraf_azure_client_id = var.telegraf_azure_client_id
+      }))
+      telegraf_azure_auth_mode                  = var.telegraf_azure_auth_mode
+      telegraf_azure_managed_identity_client_id = azurerm_user_assigned_identity.vault.client_id
+      telegraf_azure_tenant_id                  = var.telegraf_azure_tenant_id
+      telegraf_azure_client_id                  = var.telegraf_azure_client_id
+      telegraf_azure_client_secret              = var.telegraf_azure_client_secret
     })
   } : {
     enable_telegraf_monitoring = false
@@ -22,6 +30,6 @@ resource "azurerm_role_assignment" "resource_group_metrics_publisher" {
   count = var.enable_telegraf_monitoring ? 1 : 0
 
   scope                = local.resource_group_id
-  principal_id         = azurerm_user_assigned_identity.vault.principal_id
+  principal_id         = coalesce(var.telegraf_metrics_publisher_principal_id, azurerm_user_assigned_identity.vault.principal_id)
   role_definition_name = "Monitoring Metrics Publisher"
 }

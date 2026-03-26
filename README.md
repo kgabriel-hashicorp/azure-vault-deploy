@@ -232,7 +232,40 @@ After deployment:
 When `enable_telegraf_monitoring = true`:
 
 - Telegraf installation is added to instance bootstrap
-- The Vault managed identity receives the `Monitoring Metrics Publisher` role on the resource group
+- Telegraf `outputs.azure_monitor` auth is configured via environment variables:
+  - `managed_identity` auth (default, Azure-hosted VM)
+  - `service_principal` auth (external/non-Azure VM)
+- The role assignment target for `Monitoring Metrics Publisher` can be overridden with `telegraf_metrics_publisher_principal_id`; by default it uses the Vault managed identity
+
+For external Telegraf hosts, set:
+
+- `telegraf_azure_auth_mode = "service_principal"`
+- `telegraf_azure_tenant_id`
+- `telegraf_azure_client_id`
+- `telegraf_azure_client_secret`
+- `telegraf_metrics_publisher_principal_id` (Object ID of the principal writing metrics)
+
+Example `terraform.tfvars` snippet for an external Telegraf VM:
+
+```hcl
+enable_telegraf_monitoring = true
+
+telegraf_azure_auth_mode   = "service_principal"
+telegraf_azure_tenant_id   = "00000000-0000-0000-0000-000000000000"
+telegraf_azure_client_id   = "00000000-0000-0000-0000-000000000000"
+telegraf_azure_client_secret = "replace-with-client-secret"
+
+# Object ID of the same service principal (or another principal that should publish metrics)
+telegraf_metrics_publisher_principal_id = "00000000-0000-0000-0000-000000000000"
+```
+
+To avoid storing the client secret in plaintext `terraform.tfvars`, set it via environment variable:
+
+```bash
+export TF_VAR_telegraf_azure_client_secret='replace-with-client-secret'
+```
+
+Then omit `telegraf_azure_client_secret` from your checked-in variable files.
 
 ## Notes and caveats
 

@@ -42,5 +42,16 @@ vault_telemetry_config = {
 
 enable_telegraf_monitoring = true
 
+# Telegraf Azure Monitor auth mode:
+# - "managed_identity" (default): for Azure-hosted VM with identity
+# - "service_principal": for external/non-Azure VM
+telegraf_azure_auth_mode = "managed_identity"
+
+# Only required when telegraf_azure_auth_mode = "service_principal"
+# telegraf_azure_tenant_id                = "00000000-0000-0000-0000-000000000000"
+# telegraf_azure_client_id                = "00000000-0000-0000-0000-000000000000"
+# telegraf_azure_client_secret            = "replace-with-client-secret"
+# telegraf_metrics_publisher_principal_id = "00000000-0000-0000-0000-000000000000"
+
 
 
