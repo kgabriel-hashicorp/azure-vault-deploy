@@ -282,6 +282,61 @@ variable "enable_telegraf_monitoring" {
   default     = false
 }
 
+variable "telegraf_azure_auth_mode" {
+  type        = string
+  description = "Azure authentication mode for Telegraf Azure Monitor output. Supported values: `managed_identity`, `service_principal`."
+  default     = "managed_identity"
+
+  validation {
+    condition     = contains(["managed_identity", "service_principal"], var.telegraf_azure_auth_mode)
+    error_message = "telegraf_azure_auth_mode must be one of: managed_identity, service_principal."
+  }
+}
+
+variable "telegraf_azure_tenant_id" {
+  type        = string
+  description = "Azure tenant ID for Telegraf service principal auth. Required when telegraf_azure_auth_mode is `service_principal`."
+  default     = null
+  nullable    = true
+
+  validation {
+    condition     = var.telegraf_azure_auth_mode != "service_principal" || var.telegraf_azure_tenant_id != null
+    error_message = "telegraf_azure_tenant_id is required when telegraf_azure_auth_mode is `service_principal`."
+  }
+}
+
+variable "telegraf_azure_client_id" {
+  type        = string
+  description = "Azure client ID for Telegraf service principal auth. Required when telegraf_azure_auth_mode is `service_principal`."
+  default     = null
+  nullable    = true
+
+  validation {
+    condition     = var.telegraf_azure_auth_mode != "service_principal" || var.telegraf_azure_client_id != null
+    error_message = "telegraf_azure_client_id is required when telegraf_azure_auth_mode is `service_principal`."
+  }
+}
+
+variable "telegraf_azure_client_secret" {
+  type        = string
+  description = "Azure client secret for Telegraf service principal auth. Required when telegraf_azure_auth_mode is `service_principal`."
+  default     = null
+  nullable    = true
+  sensitive   = true
+
+  validation {
+    condition     = var.telegraf_azure_auth_mode != "service_principal" || var.telegraf_azure_client_secret != null
+    error_message = "telegraf_azure_client_secret is required when telegraf_azure_auth_mode is `service_principal`."
+  }
+}
+
+variable "telegraf_metrics_publisher_principal_id" {
+  type        = string
+  description = "Object (principal) ID to grant Monitoring Metrics Publisher role when Telegraf monitoring is enabled. Defaults to the Vault managed identity when null."
+  default     = null
+  nullable    = true
+}
+
 variable "telegraf_config_template" {
   type        = string
   description = "Name of Telegraf config template file. File must exist within a directory named `./templates` within your current working directory."
