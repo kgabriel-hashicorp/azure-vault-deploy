@@ -1,39 +1,39 @@
 #------------------------------------------------------------------------------
 # Common
 #------------------------------------------------------------------------------
-friendly_name_prefix  = "vaultkg"
-location              = "centralus"
+friendly_name_prefix  = "vaultdemo"
+location              = "eastus"
 create_resource_group = true
-resource_group_name   = "vault-kg"
-vault_fqdn            = "vault.azure.karla-gabriel.sbx.hashidemos.io" # Must match TLS cert SAN entry
+resource_group_name   = "vault-demo-rg"
+vault_fqdn            = "vault.example.com" # Must match TLS cert SAN entry
 vault_version         = "1.21.4+ent"
 #------------------------------------------------------------------------------
 # Networking
 #------------------------------------------------------------------------------
-vnet_id                        = "/subscriptions/7a8f92c1-4ec1-4ac3-8c76-61f3e776f351/resourceGroups/vault-kg-rg/providers/Microsoft.Network/virtualNetworks/vaultkg-vnet"
-vault_subnet_id                = "/subscriptions/7a8f92c1-4ec1-4ac3-8c76-61f3e776f351/resourceGroups/vault-kg-rg/providers/Microsoft.Network/virtualNetworks/vaultkg-vnet/subnets/vaultkg-vault-subnet"
-lb_subnet_id                   = "/subscriptions/7a8f92c1-4ec1-4ac3-8c76-61f3e776f351/resourceGroups/vault-kg-rg/providers/Microsoft.Network/virtualNetworks/vaultkg-vnet/subnets/vaultkg-lb-subnet"
+vnet_id                        = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-network-rg/providers/Microsoft.Network/virtualNetworks/example-vnet"
+vault_subnet_id                = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-network-rg/providers/Microsoft.Network/virtualNetworks/example-vnet/subnets/vault-subnet"
+lb_subnet_id                   = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-network-rg/providers/Microsoft.Network/virtualNetworks/example-vnet/subnets/lb-subnet"
 lb_is_internal                 = false
 create_vault_public_dns_record = true
-public_dns_zone_name           = "azure.karla-gabriel.sbx.hashidemos.io" # Must match vault_fqdn
-public_dns_zone_rg             = "vault-kg-rg"                          # Resource Group containing the public DNS zone
+public_dns_zone_name           = "example.com" # Must match vault_fqdn
+public_dns_zone_rg             = "example-dns-rg"                          # Resource Group containing the public DNS zone
 #------------------------------------------------------------------------------
 # Azure Key Vault installation secrets and unseal key
 #------------------------------------------------------------------------------
-prereqs_keyvault_rg_name               = "vault-kg-rg"
-prereqs_keyvault_name                  = "vaultkg-preqs-kv"
-vault_license_keyvault_secret_id       = "https://vaultkg-preqs-kv.vault.azure.net/secrets/vault-license/9e0ee0b82d0b48df84d577bea858b5f2"
-vault_tls_cert_keyvault_secret_id      = "https://vaultkg-preqs-kv.vault.azure.net/secrets/vault-cert/619b7dac5c614fcba23960d9bdac5c22"
-vault_tls_privkey_keyvault_secret_id   = "https://vaultkg-preqs-kv.vault.azure.net/secrets/vault-privkey/c07be29844cf4188b705aec92e702080"
-vault_tls_ca_bundle_keyvault_secret_id = "https://vaultkg-preqs-kv.vault.azure.net/secrets/vault-ca-bundle/072eac14b62b4e6cac26506d0ad5710b"
+prereqs_keyvault_rg_name               = "example-security-rg"
+prereqs_keyvault_name                  = "example-prereqs-kv"
+vault_license_keyvault_secret_id       = "https://example-prereqs-kv.vault.azure.net/secrets/vault-license/00000000000000000000000000000000"
+vault_tls_cert_keyvault_secret_id      = "https://example-prereqs-kv.vault.azure.net/secrets/vault-cert/00000000000000000000000000000000"
+vault_tls_privkey_keyvault_secret_id   = "https://example-prereqs-kv.vault.azure.net/secrets/vault-privkey/00000000000000000000000000000000"
+vault_tls_ca_bundle_keyvault_secret_id = "https://example-prereqs-kv.vault.azure.net/secrets/vault-ca-bundle/00000000000000000000000000000000"
 
-vault_seal_azurekeyvault_vault_name      = "vaultkg-preqs-kv"
-vault_seal_azurekeyvault_unseal_key_name = "vault-unseal-key-001"
+vault_seal_azurekeyvault_vault_name      = "example-prereqs-kv"
+vault_seal_azurekeyvault_unseal_key_name = "vault-unseal-key"
 
 #------------------------------------------------------------------------------
 # Compute
 #------------------------------------------------------------------------------
-vm_ssh_public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCTci1fU5T31aJwQ5NPNg/Wr7FA6jLG1FgUTBxieezhjxfxU9kYOXzrJQedRlhH17tJv/e28u3BGuAcM58z0TPWqpWolP/0jpjbX32CKj9ksB17IGRsTstJwpm2+xvarfFEzLMijRo/uTKTnyxodE8dPmeBJXLrdP6yrfLgRgIGC1LBCGgi2zIye4OyGqYz5DkWk3F2vWEOg2Xb9mgcL6K3tTgkPApkNOKCzD0Ed6q+7KdnQJxlj4K5DGc2H0aOwufpqhoGcf5oy06zfOJ1LNL8EtCAkLCYWmjfrhbRzbWzVGN2xQ56/Mb7DD4REiUq3T5Q4/2aJdOSHTqUFrWgWUbMec36hS8O0eiQsScdOuqfW2wC7Fzt3zLunBpluVoPRYybf3U8BlAyiXJlrVDtkgKRdq0ofAlwJfgKUXWTcDL/qeglxyxD9gWsw3QZjCcz4Y8aK1cremgtjkQZtsmZ8VShx3QevOiBxlvlVgwA7TvRMf2Ol2fwGseFs1bZDqxHKeasvlIMXkupAT1F+PH9esX2qglLsUYB+lcBGhfMV9Ubfc9f55mk3bLdt98ueiMdGK2Ql9tIxJ8Gdd4Y8qORKoQSNhw4cG2ZwfEB7tW+JCwPCVYQ7xLoxndGUNLMU1RLX1r5gvYEAc5k4QPXbQEkAE8XIL5KWaOXu4CCA8P77N+Xmw== karla.gabriel@ibm.com"
+vm_ssh_public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCdummyExamplePublicKeyReplaceMeGeneratedForDocsOnly user@example.com"
 
 vault_telemetry_config = {
   prometheus_retention_time = "30s"
@@ -42,5 +42,5 @@ vault_telemetry_config = {
 
 enable_telegraf_monitoring = true
 
-#vault login hvs.kDEbMZ4jsMcLXJCWzj19SGwB
+
 
